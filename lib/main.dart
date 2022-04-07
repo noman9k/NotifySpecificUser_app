@@ -6,15 +6,29 @@ import 'package:get/get.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'screen/home_screen.dart';
+import 'dart:async';
+import 'dart:convert';
 
-void main() async {
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
-    announcement: false,
+    announcement: true,
     badge: true,
     carPlay: false,
     criticalAlert: false,
@@ -43,6 +57,7 @@ void main() async {
       print('Message also contained a notification: ${message.notification}');
     }
   });
+
   runApp(const MyApp());
 }
 
@@ -56,7 +71,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomeScreen(),
+      home: HomeScreen(),
     );
   }
 }
