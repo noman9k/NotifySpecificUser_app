@@ -44,7 +44,7 @@ class HomeController extends GetxController {
           await http.post(postUrl, body: json.encode(data), headers: headers);
       print('response : ${response.body}');
       if (response.statusCode == 200) {
-        Get.snackbar('Notification Sent', 'Request Sent To Driver');
+        Get.snackbar('Notification Sent', 'Request Sent To $reciverId');
       } else {
         Get.snackbar('Notification Failed', 'Request Failed To Send',
             backgroundColor: Colors.red);
@@ -59,7 +59,7 @@ class HomeController extends GetxController {
   static Future<String> getToken({userId}) async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final DocumentSnapshot snapshot =
-        await firestore.collection('users').doc('test').get();
+        await firestore.collection('users').doc(userId).get();
     return snapshot['token'];
   }
 
