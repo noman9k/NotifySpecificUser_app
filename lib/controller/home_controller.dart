@@ -13,6 +13,38 @@ import 'package:http/http.dart' as http;
 class HomeController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController msgController = TextEditingController();
+
+  @override
+  void onInit() {
+    super.onInit();
+    setupInteractedMessage();
+  }
+
+  Future<void> setupInteractedMessage() async {
+    // Get any messages which caused the application to open from
+    // a terminated state.
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    // If the message also contains a data property with a "type" of "chat",
+    // navigate to a chat screen
+    if (initialMessage != null) {
+      _handleMessage(initialMessage);
+    }
+
+    // Also handle any interaction when the app is in the background via a
+    // Stream listener
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+  }
+
+  void _handleMessage(RemoteMessage message) {
+    Get.snackbar('Data', message.data.toString());
+    // if (message.data['type'] == 'chat') {
+
+    //   );
+    // }
+  }
+
   // get it from console.firebase.google.com  => project/<your Project >/settings/cloudmessaging
   static const String serverKey =
       'AAAAa4phy8g:APA91bG2oC8W6KcPNPjfXf1fBXownmQO71ptXfe2lyKqJVHgXq76rPyvOyuiCqHjWQFSoBy7SFjXHsfrXMxJU1qOJXWRDWovRvCk1OujFG54z_3Eg5b1bMjnNEFjKK5jPbu86EAvK1fR';
